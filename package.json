@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "start:prod": "node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:fix": "npm run lint --fix",
@@ -14,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",

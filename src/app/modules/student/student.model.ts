@@ -1,12 +1,15 @@
 import { Schema, model, connect } from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
-  IGuardian,
-  ILocalGuardian,
-  IStudent,
-  IUsername,
+  TGuardian,
+  TLocalGuardian,
+  TStudent,
+  TStudentModel,
+  TUsername,
 } from './student.interface';
+import config from '../../config';
 
-const userNameSchema = new Schema<IUsername>({
+const userNameSchema = new Schema<TUsername>({
   firstName: {
     type: String,
     required: true,
@@ -18,7 +21,7 @@ const userNameSchema = new Schema<IUsername>({
   },
 });
 
-const guardianSchema = new Schema<IGuardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     required: true,
@@ -39,7 +42,7 @@ const guardianSchema = new Schema<IGuardian>({
   motherContactNo: String,
 });
 
-const localGuardianSchema = new Schema<ILocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: true,
@@ -58,11 +61,15 @@ const localGuardianSchema = new Schema<ILocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<IStudent>({
+const studentSchema = new Schema<TStudent, TStudentModel>({
   id: {
     type: String,
     required: true,
     unique: true
+  },
+  password: {
+    type: String,
+    required: true
   },
   name: {
     type: userNameSchema,
@@ -117,4 +124,25 @@ const studentSchema = new Schema<IStudent>({
   profileImg: String,
 });
 
-export const StudentModel = model<IStudent>('Student', studentSchema);
+//hashing the password using pre save middleware
+studentSchema.pre('save', async function (next) {
+  const user = this;
+  user.password = await bcrypt.hash(this?.password, Number(config.bcrypt_salt_round));
+
+  next();
+})
+
+
+//instance method
+/* studentSchema.methods.isUserExists = async function (id: string) {
+  const user = await StudentModel.findOne({ id });
+  return user;
+} */
+studentSchema.statics.isUserExists = async function (id: string) {
+
+  const user = await StudentModel.findOne({ id });
+  return user;
+
+}
+
+export const StudentModel = model<TStudent, TStudentModel>('Student', studentSchema);
