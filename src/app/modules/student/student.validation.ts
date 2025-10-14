@@ -44,4 +44,5 @@ export const studentValidation = z.object({
     localGuardian: localGuardianValidation,
     isActive: z.enum(["active", "blocked"]).default("active"),
     profileImg: z.url("Invalid URL").optional(),
+    isDeleted: z.boolean().default(false)
 });

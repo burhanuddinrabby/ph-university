@@ -86,6 +86,7 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
   dateOfBirth: String,
   email: {
     type: String,
+    unique: [true, "Email is already exists!"],
     required: true,
   },
   contactNo: {
@@ -122,6 +123,10 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     default: "active"
   },
   profileImg: String,
+  isDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 //hashing the password using pre save middleware
@@ -132,7 +137,10 @@ studentSchema.pre('save', async function (next) {
   next();
 })
 
-
+studentSchema.post('save', function(doc, next){
+  doc.password = '';
+  next();
+});
 //instance method
 /* studentSchema.methods.isUserExists = async function (id: string) {
   const user = await StudentModel.findOne({ id });
