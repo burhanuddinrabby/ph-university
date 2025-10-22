@@ -127,6 +127,10 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     type: Boolean,
     default: false
   }
+}, {
+  toJSON:{
+    virtuals: true
+  }
 });
 
 //hashing the password using pre save middleware
@@ -141,6 +145,43 @@ studentSchema.post('save', function(doc, next){
   doc.password = '';
   next();
 });
+
+studentSchema.virtual('fullname').get(function () {
+  // return this.name?.firstName + ' ' + (
+  //   this.name?.middleName
+  // ) + this.name?.lastName;
+  return this.name?.firstName + (this.name?.middleName ? (' ' + this.name?.middleName) : '') + ' ' + this.name?.lastName;
+});
+
+//find not deleted students
+studentSchema.pre('find', function(next){
+  //filter undeleted students
+  this.find({
+    isDeleted: {
+      $ne: true
+    }
+  });
+  next();
+})
+// studentSchema.post('find', function (doc, next) {
+//   doc.forEach((d: { password: string; })  => d.password = '');
+//   next();
+// });
+
+studentSchema.pre('findOne', function(next){
+  //filter undeleted students
+  this.find({
+    isDeleted: {
+      $ne: true
+    }
+  });
+  next();
+})
+// studentSchema.post('findOne', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
+
 //instance method
 /* studentSchema.methods.isUserExists = async function (id: string) {
   const user = await StudentModel.findOne({ id });
