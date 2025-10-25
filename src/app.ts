@@ -1,23 +1,25 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 const app: Application = express();
 import cors from 'cors';
 import { StudentRoutes } from './app/modules/student/student.route';
-import { success } from 'zod';
+import { UserRoutes } from './app/modules/user/user.route';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
 
 app.use(express.json());
 app.use(cors());
 
 //all routes
+app.use('/api/v1/users', UserRoutes);
 app.use('/api/v1/students', StudentRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('This is IHAM University API!\n');
 });
 
-app.all('{*splat}', (req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: `${req.path} is not a valid path`
-  });
-});
+app.all('{*splat}', notFound);
+
+//global error handling
+app.use(globalErrorHandler);
+
 export default app;

@@ -1,5 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { Schema, model } from 'mongoose';
 import {
   TGuardian,
   TLocalGuardian,
@@ -7,7 +6,6 @@ import {
   TStudentModel,
   TUsername,
 } from './student.interface';
-import config from '../../config';
 
 const userNameSchema = new Schema<TUsername>({
   firstName: {
@@ -67,9 +65,11 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     required: true,
     unique: true
   },
-  password: {
-    type: String,
-    required: true
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'User is required'],
+    unique: true,
+    ref: 'User'
   },
   name: {
     type: userNameSchema,
@@ -117,34 +117,17 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     type: localGuardianSchema,
     required: true
   },
-  isActive: {
-    type: String,
-    enum: ['active', 'blocked'],
-    default: "active"
-  },
   profileImg: String,
   isDeleted: {
     type: Boolean,
     default: false
   }
 }, {
-  toJSON:{
+  toJSON: {
     virtuals: true
   }
 });
 
-//hashing the password using pre save middleware
-studentSchema.pre('save', async function (next) {
-  const user = this;
-  user.password = await bcrypt.hash(this?.password, Number(config.bcrypt_salt_round));
-
-  next();
-})
-
-studentSchema.post('save', function(doc, next){
-  doc.password = '';
-  next();
-});
 
 studentSchema.virtual('fullname').get(function () {
   // return this.name?.firstName + ' ' + (
@@ -154,7 +137,7 @@ studentSchema.virtual('fullname').get(function () {
 });
 
 //find not deleted students
-studentSchema.pre('find', function(next){
+studentSchema.pre('find', function (next) {
   //filter undeleted students
   this.find({
     isDeleted: {
@@ -168,7 +151,7 @@ studentSchema.pre('find', function(next){
 //   next();
 // });
 
-studentSchema.pre('findOne', function(next){
+studentSchema.pre('findOne', function (next) {
   //filter undeleted students
   this.find({
     isDeleted: {
