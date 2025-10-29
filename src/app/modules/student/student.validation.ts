@@ -32,7 +32,7 @@ export const createStudentValidation = z.object({
         student: z.object({
             name: userNameValidation,
             gender: z.enum(["male", "female", "other"], "Invalid gender"),
-            dateOfBirth: z.string().optional(),
+            dateOfBirth: z.date().optional(),
             email: z.email("Invalid email address"),
             contactNo: z.string().min(1, "Contact number is required"),
             emergencyContactNo: z.string().min(1, "Emergency contact number is required"),

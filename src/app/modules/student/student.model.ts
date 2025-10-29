@@ -83,7 +83,9 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     },
     required: true
   },
-  dateOfBirth: String,
+  dateOfBirth: {
+    type: Date
+  },
   email: {
     type: String,
     unique: [true, "Email is already exists!"],
