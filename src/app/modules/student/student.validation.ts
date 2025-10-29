@@ -26,23 +26,29 @@ const localGuardianValidation = z.object({
 });
 
 // main student schema
-export const studentValidation = z.object({
-    id: z.string().min(1, "ID is required"),
-    password: z.string().min(8, "Password must be minimum 8 characters"),
-    name: userNameValidation,
-    gender: z.enum(["male", "female", "other"], "Invalid gender"),
-    dateOfBirth: z.string().optional(),
-    email: z.email("Invalid email address"),
-    contactNo: z.string().min(1, "Contact number is required"),
-    emergencyContactNo: z.string().min(1, "Emergency contact number is required"),
-    bloodGroup: z
-        .enum(["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"])
-        .optional(),
-    presentAddress: z.string().min(1, "Present address is required"),
-    permanentAddress: z.string().min(1, "Permanent address is required"),
-    guardian: guardianValidation,
-    localGuardian: localGuardianValidation,
-    isActive: z.enum(["active", "blocked"]).default("active"),
-    profileImg: z.url("Invalid URL").optional(),
-    isDeleted: z.boolean().default(false)
+export const createStudentValidation = z.object({
+    body: z.object({
+        password: z.string().min(8, "Password must be minimum 8 characters"),
+        student: z.object({
+            name: userNameValidation,
+            gender: z.enum(["male", "female", "other"], "Invalid gender"),
+            dateOfBirth: z.string().optional(),
+            email: z.email("Invalid email address"),
+            contactNo: z.string().min(1, "Contact number is required"),
+            emergencyContactNo: z.string().min(1, "Emergency contact number is required"),
+            bloodGroup: z
+                .enum(["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"])
+                .optional(),
+            presentAddress: z.string().min(1, "Present address is required"),
+            permanentAddress: z.string().min(1, "Permanent address is required"),
+            guardian: guardianValidation,
+            localGuardian: localGuardianValidation,
+            isActive: z.enum(["active", "blocked"]).default("active"),
+            profileImg: z.url("Invalid URL").optional()
+        })
+    })
 });
+
+export const studentValidations = {
+    createStudentValidation
+}
