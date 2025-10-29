@@ -1,8 +1,9 @@
+import { TAcademicSemester } from "./semester.interface";
 import { AcademicSemesterModel } from "./semester.model";
 
-const createSemesterIntoDB = async (studentData: any) => {
-    const newStudent = await AcademicSemesterModel.create(studentData);
-    return newStudent;
+const createSemesterIntoDB = async (payload: TAcademicSemester) => {
+    const result = await AcademicSemesterModel.create(payload);
+    return result;
 };
 
 

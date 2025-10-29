@@ -4,9 +4,7 @@ import catchAsync from "../../utils/catchAsync";
 import { AcademicSemesterServices } from "./semester.service";
 
 const createAcademicSemester = catchAsync(async (req, res) => {
-    const { password } = req.body;
-
-    const result = await AcademicSemesterServices.createSemesterIntoDB(password);
+    const result = await AcademicSemesterServices.createSemesterIntoDB(req.body);
 
     sendResponse(res, {
         statusCode: status.OK,
