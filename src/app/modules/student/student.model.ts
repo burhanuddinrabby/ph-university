@@ -173,7 +173,6 @@ studentSchema.pre('findOne', function (next) {
   return user;
 } */
 studentSchema.statics.isUserExists = async function (id: string) {
-
   const user = await StudentModel.findOne({ id });
   return user;
 
