@@ -1,22 +1,25 @@
 import config from "../../config";
+import { TAcademicSemester } from "../academicSemester/semester.interface";
+import { AcademicSemesterModel } from "../academicSemester/semester.model";
 import { TStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
 import { TUser } from "./user.interface";
 import { UserModel } from "./user.model";
+import { generateStudentId } from "./user.utils";
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     const userData: Partial<TUser> = {}
 
-    //if pass not given
+    //if pass not given and set role
     userData.password = password || (config.default_password as string);
-
-    // set role
     userData.role = 'student'
 
-    //manually generated id
-    userData.id = '2025100001'
-
-
+    //find academic semester info
+    const admissionSemester = await AcademicSemesterModel.findOne({
+        _id: studentData.admissionSemester
+    });
+    userData.id = await generateStudentId(admissionSemester as TAcademicSemester);
+    
     //create a user
     const newUser = await UserModel.create(userData);
 

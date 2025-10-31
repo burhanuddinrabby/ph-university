@@ -32,7 +32,7 @@ export const createStudentValidation = z.object({
         student: z.object({
             name: userNameValidation,
             gender: z.enum(["male", "female", "other"], "Invalid gender"),
-            dateOfBirth: z.date().optional(),
+            dateOfBirth: z.string().optional(),
             email: z.email("Invalid email address"),
             contactNo: z.string().min(1, "Contact number is required"),
             emergencyContactNo: z.string().min(1, "Emergency contact number is required"),
@@ -43,8 +43,8 @@ export const createStudentValidation = z.object({
             permanentAddress: z.string().min(1, "Permanent address is required"),
             guardian: guardianValidation,
             localGuardian: localGuardianValidation,
-            isActive: z.enum(["active", "blocked"]).default("active"),
-            profileImg: z.url("Invalid URL").optional()
+            profileImg: z.url("Invalid URL").optional(),
+            admissionSemester: z.string()
         })
     })
 });

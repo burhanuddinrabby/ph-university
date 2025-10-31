@@ -22,9 +22,7 @@ const createStudentIntoDB = async (student: TStudent) => {
 };
 
 const getAllStudentsFromDB = async () => {
-  const result = await StudentModel.find({}, {
-    name: 1
-  });
+  const result = await StudentModel.find({});
   // const result = await StudentModel.find({}, {
   //   password: 0
   // });

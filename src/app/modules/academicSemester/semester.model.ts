@@ -24,8 +24,7 @@ const academicSemesterSchema = new Schema<TAcademicSemester>({
     endMonth: {
         type: String,
         enum: months,
-    },
-
+    }
 }, {
     timestamps: true
 }
@@ -48,14 +47,14 @@ academicSemesterSchema.pre("save" as any, async function (next: NextFunction) {
     this.startMonth = startEndMonthMapper[this.name][0] as any;
     this.endMonth = startEndMonthMapper[this.name][1] as any;
 
-    // next();
+    next();
 });
 
 academicSemesterSchema.pre('findOneAndUpdate' as any, async function (this: any, next: NextFunction) {
     //will give the payload to update
     const payload = this.getUpdate();
 
-    console.log(this.getUpdate());
+    // console.log(this.getUpdate());
 
     if (payload.name && !payload.year) {
         // this.getFiler() returns { _id: '6903da466d7824a1f7858852' }

@@ -120,9 +120,10 @@ const studentSchema = new Schema<TStudent, TStudentModel>({
     required: true
   },
   profileImg: String,
-  isDeleted: {
-    type: Boolean,
-    default: false
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'Admission Semester is required'],
+    ref: 'Semester'
   }
 }, {
   toJSON: {
@@ -148,10 +149,6 @@ studentSchema.pre('find', function (next) {
   });
   next();
 })
-// studentSchema.post('find', function (doc, next) {
-//   doc.forEach((d: { password: string; })  => d.password = '');
-//   next();
-// });
 
 studentSchema.pre('findOne', function (next) {
   //filter undeleted students
@@ -175,7 +172,6 @@ studentSchema.pre('findOne', function (next) {
 studentSchema.statics.isUserExists = async function (id: string) {
   const user = await StudentModel.findOne({ id });
   return user;
-
 }
 
 export const StudentModel = model<TStudent, TStudentModel>('Student', studentSchema);
